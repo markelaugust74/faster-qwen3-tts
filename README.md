@@ -4,32 +4,17 @@ Real-time Qwen3-TTS inference using CUDA graph capture. No Flash Attention, no v
 
 ## Install
 
-<<<<<<< HEAD
 Requires: Python 3.10+, NVIDIA GPU with CUDA.
-=======
-Requires: Python 3.10+, PyTorch 2.5.1+, NVIDIA GPU with CUDA.
->>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
 
 ```bash
 pip install faster-qwen3-tts
 ```
-<<<<<<< HEAD
-=======
-
-**PyTorch compatibility note:** CUDA-graph capture in the fast path is not reliable on `torch<=2.5.0` for this project (capture can fail with "operation not permitted when stream is capturing"). We validated `2.5.1+` as working and set that as the minimum supported version.
-
-**Blackwell note:** RTX 50xx / Blackwell GPUs need CUDA 12.8 PyTorch wheels. If the default setup fails on those cards, install a `cu128` PyTorch build (PyTorch 2.7+).
->>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
 
 ## Quick Start
 
 ### Python
 
 ```python
-<<<<<<< HEAD
-=======
-from examples.audio import StreamPlayer  # helper from this repo's examples/
->>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
 from faster_qwen3_tts import FasterQwen3TTS
 
 model = FasterQwen3TTS.from_pretrained("Qwen/Qwen3-TTS-12Hz-0.6B-Base")
@@ -41,25 +26,12 @@ ref_text = (
 )
 
 # Streaming — yields audio chunks during generation
-<<<<<<< HEAD
 for audio_chunk, sr, timing in model.generate_voice_clone_streaming(
     text="What do you mean that I'm not real?", language="English",
     ref_audio=ref_audio, ref_text=ref_text,
     chunk_size=8,  # 8 steps ≈ 667ms of audio per chunk
 ):
     play(audio_chunk, sr)  # process/send each chunk immediately
-=======
-play = StreamPlayer()
-try:
-    for audio_chunk, sr, timing in model.generate_voice_clone_streaming(
-        text="What do you mean that I'm not real?", language="English",
-        ref_audio=ref_audio, ref_text=ref_text,
-        chunk_size=8,  # 8 steps ≈ 667ms of audio per chunk
-    ):
-        play(audio_chunk, sr)
-finally:
-    play.close()
->>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
 
 # Non-streaming — returns all audio at once
 audio_list, sr = model.generate_voice_clone(
@@ -68,17 +40,6 @@ audio_list, sr = model.generate_voice_clone(
 )
 ```
 
-<<<<<<< HEAD
-=======
-For local speaker playback from a repo checkout with the example helper:
-
-```bash
-pip install sounddevice
-```
-
-`examples/audio.py` contains a small `StreamPlayer` helper used by [`examples/streaming_playback.py`](examples/streaming_playback.py). It keeps one output stream open and queues chunks into it. A one-shot player such as `sounddevice.play(audio_chunk, sr)` restarts playback per chunk and can introduce gaps.
-
->>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
 ### CLI
 
 Voice cloning (reference audio):
@@ -116,11 +77,7 @@ faster-qwen3-tts design \
   --output out.wav
 ```
 
-<<<<<<< HEAD
 Streaming (prints RTF after write):
-=======
-Streaming generation to a final WAV file (prints RTF after write):
->>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
 
 ```bash
 faster-qwen3-tts custom \
@@ -155,30 +112,6 @@ python demo/server.py
 
 Features: voice clone (upload any WAV or use your microphone), voice design (1.7B-VoiceDesign model), streaming/non-streaming toggle, adjustable chunk size, live TTFA/RTF metrics, WAV download.
 
-<<<<<<< HEAD
-=======
-### OpenAI-compatible API server
-
-`examples/openai_server.py` exposes a `POST /v1/audio/speech` endpoint that follows the OpenAI TTS API contract, so it works out of the box with OpenWebUI, llama-swap, and any other OpenAI-compatible client.
-
-```bash
-pip install "faster-qwen3-tts[demo]"
-python examples/openai_server.py \
-    --ref-audio ref_audio.wav \
-    --ref-text "I'm confused why some people have super short timelines, yet at the same time are bullish on scaling up reinforcement learning atop LLMs. If we're actually close to a human-like learner, then this whole approach of training on verifiable outcomes is doomed." \
-    --language English --port 8000
-```
-
-```bash
-curl http://localhost:8000/v1/audio/speech \
-    -H "Content-Type: application/json" \
-    -d '{"model": "tts-1", "input": "Hello world.", "voice": "alloy", "response_format": "wav"}' \
-    --output speech.wav
-```
-
-To expose multiple voices, pass a JSON file mapping names to reference audio configs — each `voice` value in a request will be routed to the matching entry (`--voices voices.json`). WAV and PCM formats stream chunks as they are generated; MP3 requires `pydub`.
-
->>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
 ## Results
 
 Benchmarks include tokenization + inference (apples-to-apples with baseline). RTF > 1.0 = faster than real-time. TTFA measured as time to first playable audio chunk using streaming (chunk_size=8).
@@ -260,11 +193,6 @@ Smaller chunks = lower latency but more decode overhead. `chunk_size=2` is the s
 
 The CUDA graphs are unchanged — both predictor and talker graphs are replayed per step. The streaming generator yields codec ID chunks every `chunk_size` steps, and the model wrapper decodes each chunk to audio using a sliding window with 25-frame left context (matching the upstream codec's `chunked_decode` pattern) to avoid boundary artifacts.
 
-<<<<<<< HEAD
-=======
-The Python streaming methods are pull-based generators: they prepare the next chunk when the caller requests it. For realtime local playback, use a queue-backed player such as `StreamPlayer`; blocking after each yielded chunk prevents generation and playback from overlapping.
-
->>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
 ## Voice Cloning Quality
 
 ### Cloning modes
@@ -273,17 +201,10 @@ The Python streaming methods are pull-based generators: they prepare the next ch
 
 | Mode | `xvec_only` | Notes |
 |---|---|---|
-<<<<<<< HEAD
 | Simple (x-vector) | `True` (default) | Speaker embedding only — shorter prefill, clean language switching, no `ref_text` needed |
 | Advanced (ICL) | `False` | Full reference audio in context — requires accurate `ref_text`, may produce a brief artifact at the start since it literally continues the sentence `ref_wav` you use |
 
 Simple mode is the default and generally produces clean results. Advanced (ICL) mode can more closely match the reference timbre but requires an accurate transcript and sometimes has a rough start on the first word.
-=======
-| Simple (x-vector) | `True` | Speaker embedding only — shorter prefill, clean language switching, no `ref_text` needed |
-| Advanced (ICL) | `False` (default) | Full reference audio in context — requires accurate `ref_text`, may produce a brief artifact at the start since it literally continues the sentence `ref_wav` you use |
-
-The default now matches upstream Qwen3-TTS: ICL mode with the reference audio in context. X-vector-only mode remains available as an opt-in for cleaner language switching and shorter prefills.
->>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
 
 ### Decoder context (ICL mode)
 
@@ -292,24 +213,11 @@ The 12 Hz codec uses a causal `chunked_decode`: each frame is reconstructed usin
 ### Text input streaming vs Non-streaming quality
 
 The original Qwen3TTS implementation supports two mode of generation. It either takes the full input text and prepares the utterance, or it feeds the text progressively. This is the `non_streaming_mode` parameter in the generation methods. The name is maintained from the Qwen3TTS implementation, but I understand it might bring some headaches since here we also have general audio output streaming.
-<<<<<<< HEAD
 `generate_voice_clone` defaults to `non_streaming_mode=True` to put the **full target text** into the prefill before any audio is generated. This improves prosody/consistency for non‑streaming use cases.
 `generate_voice_clone_streaming` also defaults to `non_streaming_mode=True`, which pre-fills the full target text before streaming decode. Set it to `False` to match the upstream step‑by‑step text feeding behavior.
 
 **Performance impact (RTX 4090, 1.7B, ICL, chunk_size=8):** TTFA is unchanged (≈159ms ± 1ms), and RTF is effectively the same (nsm=False: 4.87 ± 0.01, nsm=True: 4.85 ± 0.01).
 
-=======
-`generate_voice_clone` now defaults to `non_streaming_mode=False` to match upstream step-by-step text feeding during decode.
-`generate_voice_clone_streaming` also defaults to `non_streaming_mode=False`. Set either method to `True` to pre-fill the full target text before decode for the old behavior.
-`generate_custom_voice`, `generate_custom_voice_streaming`, `generate_voice_design`, and `generate_voice_design_streaming` default to `non_streaming_mode=True` to match the upstream CustomVoice and VoiceDesign defaults.
-
-**Performance impact (RTX 4090, 1.7B, ICL, chunk_size=8):** TTFA is unchanged (≈159ms ± 1ms), and RTF is effectively the same (nsm=False: 4.87 ± 0.01, nsm=True: 4.85 ± 0.01).
-
-### Base-model instruct
-
-`instruct` is available on Base voice cloning, but treat it as experimental when used with `xvec_only=True`. In local testing and upstream-core probing, instruction-following behaved much more predictably in ICL mode (`xvec_only=False`) than in x-vector-only mode.
-
->>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
 ### ICL Phoneme Artifact
 
 In ICL mode the model's prefill ends with the last codec token of the reference audio, so the first generated token is conditioned on whatever phoneme the reference ends on. If the reference ends mid-word, that phoneme bleeds into the generated speech.
@@ -481,57 +389,6 @@ The speaker embedding is a 4KB file (2048-dim bf16 vector). In `x_vector_only` m
 - **No accent bleed**: native pronunciation per language
 - **Shorter prefill**: 10 tokens vs ~80+ in full ICL clone mode
 - **No ref audio at runtime**: just the 4KB embedding file
-<<<<<<< HEAD
-=======
-
-You can now pass a precomputed prompt directly to the public APIs. The wrapper
-accepts either:
-- the raw `prompt_items` list returned by `create_voice_clone_prompt(...)`
-- or the lower-level dict form produced by `_prompt_items_to_voice_clone_prompt(...)`
-
-```python
-import torch
-from faster_qwen3_tts import FasterQwen3TTS
-
-model = FasterQwen3TTS.from_pretrained("Qwen/Qwen3-TTS-12Hz-1.7B-Base")
-
-# 1) Compute prompt_items once from reference audio
-prompt_items = model.model.create_voice_clone_prompt(
-    ref_audio="voice.wav",
-    ref_text="",
-    x_vector_only_mode=True,
-)
-
-# 2) You can pass prompt_items directly
-audio_list, sr = model.generate_voice_clone(
-    text="Hello world!",
-    language="English",
-    voice_clone_prompt=prompt_items,
-)
-
-# 3) Or save just the speaker embedding and rebuild the compact dict form
-spk_emb = prompt_items[0].ref_spk_embedding
-
-torch.save(spk_emb.detach().cpu(), "speaker.pt")
-
-spk_emb = torch.load("speaker.pt", weights_only=True).to(model.device)
-
-voice_clone_prompt = {
-    "ref_spk_embedding": [spk_emb],
-}
-
-audio_list, sr = model.generate_voice_clone(
-    text="Hello world!",
-    language="English",
-    voice_clone_prompt=voice_clone_prompt,
-)
-```
-
-When `voice_clone_prompt` is provided, prompt extraction from `ref_audio` is skipped.
-For x-vector-only prompts, `ref_text` is ignored.
-For ICL precomputed prompts, pass `x_vector_only_mode=[False]`, `icl_mode=[True]`,
-and a non-`None` `ref_code`, and keep `ref_text` populated.
->>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
 
 ## License
 

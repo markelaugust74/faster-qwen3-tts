@@ -36,11 +36,7 @@ if exist ".venv\Scripts\python.exe" (
     if !HAS_UV! equ 1 (
         uv venv .venv --python 3.10
         echo Installing PyTorch with CUDA support...
-<<<<<<< HEAD
-        uv pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124 --python .venv\Scripts\python.exe
-=======
         uv pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu128 --python .venv\Scripts\python.exe
->>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
         uv pip install -e . --python .venv\Scripts\python.exe
         
         echo Attempting to install flash-attn ^(optional^)...
@@ -50,11 +46,7 @@ if exist ".venv\Scripts\python.exe" (
         call .venv\Scripts\activate.bat
         python -m pip install --upgrade pip
         echo Installing PyTorch with CUDA support...
-<<<<<<< HEAD
-        pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124
-=======
         pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu128
->>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
         pip install -e .
         
         echo Attempting to install flash-attn ^(optional^)...
@@ -68,12 +60,8 @@ echo.
 .venv\Scripts\python.exe -c "import torch; assert torch.cuda.is_available(), 'CUDA not available'; print(f'PyTorch {torch.__version__}, CUDA {torch.version.cuda}, GPU: {torch.cuda.get_device_name(0)}')" || (
     echo.
     echo WARNING: CUDA not available. You may need to install a CUDA-enabled PyTorch wheel.
-<<<<<<< HEAD
-    echo   .venv\Scripts\pip install torch --index-url https://download.pytorch.org/whl/cu124
-=======
     echo   .venv\Scripts\pip install torch --index-url https://download.pytorch.org/whl/cu128
     echo   Note: RTX 50xx / Blackwell GPUs need CUDA 12.8 wheels (PyTorch 2.7+).
->>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
 )
 
 REM Pre-download models to HuggingFace cache

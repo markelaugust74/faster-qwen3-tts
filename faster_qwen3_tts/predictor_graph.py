@@ -31,19 +31,9 @@ class PredictorGraph:
         codebook_tokens = mpg.run(pred_input)  # pred_input: [1, 2, H]
     """
 
-<<<<<<< HEAD
     def __init__(self, code_predictor, pred_config, talker_hidden_size, device='cuda:0', dtype=torch.bfloat16,
                  do_sample=True, top_k=50, top_p=1.0, temperature=0.9):
         self.device = device
-=======
-    def __init__(self, code_predictor, pred_config, talker_hidden_size, device='cuda', dtype=torch.bfloat16,
-                 do_sample=True, top_k=50, top_p=1.0, temperature=0.9):
-        self.device = device
-        device_index = torch.device(device).index
-        device_index = device_index if device_index is not None else torch.cuda.current_device()
-        self.device_index = device_index
-
->>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
         self.dtype = dtype
         self.num_layers = pred_config.num_hidden_layers
         self.hidden_size = pred_config.hidden_size
@@ -188,7 +178,6 @@ class PredictorGraph:
 
         print("Capturing CUDA graph for predictor...")
 
-<<<<<<< HEAD
         s = torch.cuda.Stream()
         s.wait_stream(torch.cuda.current_stream())
         with torch.cuda.stream(s):
@@ -201,21 +190,6 @@ class PredictorGraph:
             self.static_cache.reset()
             with torch.cuda.graph(self.graph):
                 self._full_loop()
-=======
-        with torch.cuda.device(self.device_index):
-            s = torch.cuda.Stream()
-            s.wait_stream(torch.cuda.current_stream())
-            with torch.cuda.stream(s):
-                self.graph = torch.cuda.CUDAGraph()
-                # Warmup in capture stream
-                self.static_cache.reset()
-                self._full_loop()
-                torch.cuda.synchronize()
-
-                self.static_cache.reset()
-                with torch.cuda.graph(self.graph):
-                    self._full_loop()
->>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
 
         torch.cuda.current_stream().wait_stream(s)
         torch.cuda.synchronize()

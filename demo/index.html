@@ -59,23 +59,14 @@ body {
 .app {
   display: flex;
   flex-direction: column;
-<<<<<<< HEAD
   height: 100vh;
   height: 100dvh;
-=======
-  justify-content: center;
-  min-height: 100vh;
-  min-height: 100dvh;
->>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
   max-width: 680px;
   margin: 0 auto;
   padding: 10px 16px;
   padding-bottom: max(10px, env(safe-area-inset-bottom));
   gap: 8px;
-<<<<<<< HEAD
   overflow: hidden;
-=======
->>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
 }
 
 /* ── Header ── */
@@ -638,7 +629,6 @@ body {
 @keyframes blink   { 0%,100%{opacity:1} 50%{opacity:0.2} }
 @keyframes sweep   { 0%{transform:translateX(-200%)} 100%{transform:translateX(500%)} }
 @keyframes wavebar { 0%,100%{transform:scaleY(0.3)} 50%{transform:scaleY(1)} }
-<<<<<<< HEAD
 
 /* ── Tab bar ── */
 .tab-bar {
@@ -825,8 +815,6 @@ body {
 .chat-send-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 .chat-stop-btn { background: var(--red); color: #fff; }
 .chat-stop-btn:hover { filter: brightness(1.15); }
-=======
->>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
 </style>
 </head>
 <body>
@@ -836,13 +824,10 @@ body {
   <header class="hdr">
     <h1>faster-qwen3-tts</h1>
     <span class="badge">CUDA GRAPHS</span>
-<<<<<<< HEAD
     <div class="tab-bar">
       <button class="tab-btn active" id="tabTTS" onclick="switchTab('tts')">TTS</button>
       <button class="tab-btn" id="tabChat" onclick="switchTab('chat')">Chat</button>
     </div>
-=======
->>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
     <span class="spacer"></span>
     <button class="mpill" onclick="openSettings()" title="Settings">
       <span class="mdot" id="mdot"></span>
@@ -856,11 +841,8 @@ body {
     </button>
   </header>
 
-<<<<<<< HEAD
   <!-- Tab panels -->
   <div id="panelTTS" class="tab-panel">
-=======
->>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
   <!-- Main content -->
   <div class="main">
     <div class="text-wrap">
@@ -964,7 +946,6 @@ body {
     </div>
 
   </div>
-<<<<<<< HEAD
   </div><!-- /#panelTTS -->
 
   <!-- Chat panel -->
@@ -1020,8 +1001,6 @@ body {
 
     </div>
   </div><!-- /#panelChat -->
-=======
->>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
 
 </div><!-- /.app -->
 
@@ -1067,16 +1046,6 @@ body {
         <span class="sv" id="chunkV">8</span>
       </div>
     </div>
-<<<<<<< HEAD
-=======
-    <div class="s-row">
-      <label>Text feed</label>
-      <div class="toggle">
-        <div class="tog on" data-nsm="0" onclick="setNonStreamingMode(false)">Step-by-step</div>
-        <div class="tog" data-nsm="1" onclick="setNonStreamingMode(true)">Prefill text</div>
-      </div>
-    </div>
->>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
 
     <div class="s-section">Sampling</div>
     <div class="s-grid3">
@@ -1111,7 +1080,6 @@ body {
       <label>Microphone</label>
       <select id="micSel"></select>
     </div>
-<<<<<<< HEAD
 
     <div class="s-section">Ollama (Chat)</div>
     <div class="s-row">
@@ -1128,8 +1096,6 @@ body {
         onchange="saveChatSettings()"
         placeholder="gemma3:4b">
     </div>
-=======
->>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
   </div>
 </div>
 
@@ -1160,10 +1126,6 @@ function setPlayBtns(disabled) {
 // ── State ─────────────────────────────────────────────────────────────────────
 let genMode  = 'stream';
 let xvecOnly = false;
-<<<<<<< HEAD
-=======
-let nonStreamingMode = false;
->>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
 let busy     = false;
 let refFile  = null;
 let presetRefId = null;
@@ -1194,19 +1156,12 @@ let recStream = null, recCtx = null, recSource = null, recProc = null;
 let recGain = null, recAnalyser = null, recMeterRaf = null, recMeterBuf = null;
 let recChunks = [], recActive = false, recDeviceId = null;
 let recPeak = 0, recHasSignal = false, recSignalTs = null, recSignalCount = 0;
-<<<<<<< HEAD
 const REC_SR = 16000;
-=======
-const REC_SR = 24000;
->>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
 
 // ── Init ──────────────────────────────────────────────────────────────────────
 window.addEventListener('load', async () => {
   initTheme();
-<<<<<<< HEAD
   loadChatSettings();
-=======
->>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
   autoGrow($('voiceInstr'));
   await fetchStatus();
   if (!loadedModel && availableModels.length > 0) {
@@ -1252,21 +1207,6 @@ function setMode(m) {
     el.classList.toggle('on', el.dataset.m === m));
   $('chunkRow').style.display = m === 'stream' ? '' : 'none';
 }
-<<<<<<< HEAD
-=======
-function setNonStreamingMode(v) {
-  nonStreamingMode = v;
-  document.querySelectorAll('.tog[data-nsm]').forEach(el =>
-    el.classList.toggle('on', el.dataset.nsm === (v ? '1' : '0')));
-}
-function defaultNonStreamingModeForModel(modelId) {
-  return !!modelId && (modelId.includes('CustomVoice') || modelId.includes('VoiceDesign'));
-}
-function syncTextFeedDefault(modelId) {
-  if (!modelId) return;
-  setNonStreamingMode(defaultNonStreamingModeForModel(modelId));
-}
->>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
 function setXvec(v) {
   xvecOnly = v;
   document.querySelectorAll('.tog[data-x]').forEach(el =>
@@ -1315,10 +1255,6 @@ async function selectPresetRef(id) {
 
     presetRefId = id;
     refFile = null; // avoid uploading when preset is selected
-<<<<<<< HEAD
-=======
-    setXvec(false); // presets have verified transcripts — use ICL mode
->>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
     $('refLabel').textContent = d.label || d.filename || 'Reference audio';
     $('refChip').classList.add('has');
     const prev = $('recPreview');
@@ -1366,10 +1302,6 @@ async function fetchStatus() {
       // Only trust loadedModel when the server confirms it's actually loaded
       loadedModel = d.model;
       $('modelSel').value = d.model;
-<<<<<<< HEAD
-=======
-      syncTextFeedDefault(d.model);
->>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
     }
     populateSpeakers(d.speakers || []);
     renderPresetRefs(d.preset_refs || []);
@@ -1391,10 +1323,6 @@ async function loadModel() {
     if (d.status === 'loaded' || d.status === 'already_loaded') {
       loadedModel  = loadingModel;
       loadingModel = null;
-<<<<<<< HEAD
-=======
-      syncTextFeedDefault(loadedModel);
->>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
       setPill('loaded', 'ready');
       fetchStatus();
     } else {
@@ -1741,11 +1669,7 @@ async function stopRec() {
     prev.src = URL.createObjectURL(rawWav);
     prev.style.display = 'block';
 
-<<<<<<< HEAD
     // Resample to 16kHz in the background for server use
-=======
-    // Resample to 24kHz for server use (codec's native rate; transcription server handles 16kHz resampling)
->>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
     let out = buf;
     if (buf.sampleRate !== REC_SR) {
       const len    = Math.ceil(buf.duration * REC_SR);
@@ -1755,10 +1679,6 @@ async function stopRec() {
       out = await offCtx.startRendering();
     }
     const wav = bufToWav(out);
-<<<<<<< HEAD
-=======
-    clearPresetSelection();
->>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
     refFile = new File([wav], 'recorded.wav', { type: 'audio/wav' });
     $('refLabel').textContent = 'recorded.wav';
     $('refChip').classList.add('has');
@@ -1809,7 +1729,6 @@ async function warmAudio() {
   try { await initAudio(24000); } catch {}
 }
 
-<<<<<<< HEAD
 async function ensureAudio(sr) {
   if (actx) {
     if (actx.state === 'suspended') await actx.resume();
@@ -1818,8 +1737,6 @@ async function ensureAudio(sr) {
   await initAudio(sr);
 }
 
-=======
->>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
 async function initAudio(sr) {
   rawPcmSr = sr || 24000;
   pcmQueue = []; rawPcmParts = [];
@@ -1947,10 +1864,6 @@ async function generate(mode) {
   fd.append('temperature',        $('tempSl').value);
   fd.append('top_k',              $('topkSl').value);
   fd.append('repetition_penalty', $('repSl').value);
-<<<<<<< HEAD
-=======
-  fd.append('non_streaming_mode', nonStreamingMode ? 'true' : 'false');
->>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
 
   if (mode === 'voice_clone') {
     if (presetRefId) {
@@ -2124,25 +2037,18 @@ function dlAudio() {
 document.addEventListener('keydown', e => {
   if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
     e.preventDefault();
-<<<<<<< HEAD
     if ($('panelChat').style.display !== 'none') {
       sendChat();
     } else {
       const mode = refFile ? 'voice_clone' : $('speakerId').value ? 'custom' : 'voice_design';
       generate(mode);
     }
-=======
-    // Pick best mode based on what's filled in
-    const mode = refFile ? 'voice_clone' : $('speakerId').value ? 'custom' : 'voice_design';
-    generate(mode);
->>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
   }
   if (e.key === 'Escape') {
     if ($('loaderOv').classList.contains('open'))  $('loaderOv').classList.remove('open');
     else if ($('settingsOv').classList.contains('open')) closeSettings();
   }
 });
-<<<<<<< HEAD
 
 // ── Tab switching ─────────────────────────────────────────────────────────────
 function switchTab(tab) {
@@ -2391,8 +2297,6 @@ function escHtml(s) {
   return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
-=======
->>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
 </script>
 </body>
 </html>

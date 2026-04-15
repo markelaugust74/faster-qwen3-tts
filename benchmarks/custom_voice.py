@@ -9,11 +9,7 @@ from faster_qwen3_tts import FasterQwen3TTS
 
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MODEL_SIZE = os.environ.get('MODEL_SIZE', '0.6B')
-<<<<<<< HEAD
-MODEL_ID = os.path.join(PROJECT_DIR, 'models', f'Qwen3-TTS-12Hz-{MODEL_SIZE}-Base')
-=======
 MODEL_ID = f'Qwen/Qwen3-TTS-12Hz-{MODEL_SIZE}-CustomVoice'
->>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
 text = os.environ.get(
     'TEXT',
     "Ladies and gentlemen, I have just been informed that this speech is being generated faster than I can speak it."
