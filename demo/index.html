@@ -59,14 +59,23 @@ body {
 .app {
   display: flex;
   flex-direction: column;
+<<<<<<< HEAD
+  height: 100vh;
+  height: 100dvh;
+=======
   justify-content: center;
   min-height: 100vh;
   min-height: 100dvh;
+>>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
   max-width: 680px;
   margin: 0 auto;
   padding: 10px 16px;
   padding-bottom: max(10px, env(safe-area-inset-bottom));
   gap: 8px;
+<<<<<<< HEAD
+  overflow: hidden;
+=======
+>>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
 }
 
 /* ── Header ── */
@@ -629,6 +638,195 @@ body {
 @keyframes blink   { 0%,100%{opacity:1} 50%{opacity:0.2} }
 @keyframes sweep   { 0%{transform:translateX(-200%)} 100%{transform:translateX(500%)} }
 @keyframes wavebar { 0%,100%{transform:scaleY(0.3)} 50%{transform:scaleY(1)} }
+<<<<<<< HEAD
+
+/* ── Tab bar ── */
+.tab-bar {
+  display: flex; gap: 2px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 2px;
+  margin-left: 6px;
+}
+.tab-btn {
+  padding: 4px 14px;
+  font-size: 12px; font-weight: 600; font-family: inherit;
+  border: none; border-radius: 6px;
+  background: transparent; color: var(--dim);
+  cursor: pointer; transition: all 0.15s;
+}
+.tab-btn:hover { color: var(--text2); }
+.tab-btn.active {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* ── Tab panels ── */
+.tab-panel { display: flex; flex-direction: column; flex: 1; min-height: 0; overflow: hidden; }
+#panelTTS { justify-content: center; overflow-y: auto; }
+#panelChat { overflow: hidden; }
+
+/* ── Settings text input ── */
+.s-input {
+  flex: 1;
+  background: var(--surface2); border: 1px solid var(--border2);
+  border-radius: var(--radius-sm);
+  color: var(--text); font-size: 12px; font-family: inherit;
+  padding: 5px 8px; outline: none;
+  transition: border-color 0.15s;
+}
+.s-input:focus { border-color: var(--accent-ring); }
+
+/* ── Chat wrap ── */
+.chat-wrap {
+  display: flex; flex-direction: column;
+  flex: 1; min-height: 0;
+  gap: 6px;
+}
+
+/* ── System prompt ── */
+.sys-prompt-wrap {
+  flex-shrink: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+.sys-toggle {
+  display: flex; align-items: center; gap: 6px;
+  width: 100%; padding: 7px 10px;
+  background: none; border: none;
+  color: var(--dim); font-size: 11px; font-family: inherit;
+  cursor: pointer; text-align: left;
+  transition: color 0.15s;
+}
+.sys-toggle:hover { color: var(--text2); }
+.sys-toggle svg { transition: transform 0.2s; }
+.sys-toggle.open svg { transform: rotate(90deg); }
+.sys-body { padding: 0 8px 8px; }
+.sys-ta {
+  width: 100%;
+  background: var(--surface2); border: 1px solid var(--border2);
+  border-radius: var(--radius-sm);
+  color: var(--text); font-size: 12px; font-family: inherit;
+  padding: 7px 9px; resize: none; outline: none;
+  transition: border-color 0.15s; min-height: 56px;
+}
+.sys-ta:focus { border-color: var(--accent-ring); }
+
+/* ── Messages ── */
+.chat-msgs {
+  flex: 1; min-height: 0;
+  overflow-y: auto;
+  display: flex; flex-direction: column;
+  gap: 10px;
+  padding: 4px 2px;
+  scroll-behavior: smooth;
+}
+.chat-msgs::-webkit-scrollbar { width: 4px; }
+.chat-msgs::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
+
+.chat-empty {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  flex: 1; gap: 10px; opacity: 0.4; text-align: center;
+  padding: 40px 20px;
+}
+.chat-empty-icon svg { width: 36px; height: 36px; }
+.chat-empty p { font-size: 13px; color: var(--text2); max-width: 220px; line-height: 1.5; }
+
+.chat-bubble {
+  display: flex; flex-direction: column; gap: 3px;
+  max-width: 90%;
+  flex-shrink: 0;
+}
+.chat-bubble.user { align-self: flex-end; }
+.chat-bubble.assistant { align-self: flex-start; }
+
+.bubble-role {
+  font-size: 10px; font-weight: 600; letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+.chat-bubble.user .bubble-role { text-align: right; color: var(--accent); }
+
+.bubble-text {
+  padding: 9px 12px;
+  border-radius: 12px;
+  font-size: 13px; line-height: 1.55;
+  white-space: pre-wrap; word-break: break-word;
+}
+.chat-bubble.user .bubble-text {
+  background: var(--accent);
+  color: #fff;
+  border-bottom-right-radius: 4px;
+}
+.chat-bubble.assistant .bubble-text {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-bottom-left-radius: 4px;
+}
+
+/* Streaming cursor blink */
+.bubble-text.streaming::after {
+  content: '▋';
+  display: inline-block;
+  animation: blink 0.8s step-end infinite;
+  margin-left: 1px;
+  color: var(--accent);
+}
+
+/* ── Chat input row ── */
+.chat-input-row {
+  display: flex; align-items: flex-end; gap: 6px;
+  flex-shrink: 0;
+}
+.chat-input-wrap {
+  flex: 1;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 8px 10px;
+  transition: border-color 0.15s;
+}
+.chat-input-wrap:focus-within { border-color: var(--accent-ring); }
+.chat-ta {
+  width: 100%; max-height: 120px;
+  background: transparent; border: none; outline: none;
+  color: var(--text); font-size: 14px; font-family: inherit;
+  resize: none; line-height: 1.4;
+}
+.chat-ta::placeholder { color: var(--dimmer); }
+.chat-actions {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  flex-shrink: 0;
+}
+.speak-toggle {
+  display: flex; align-items: center; cursor: pointer;
+  width: 30px; height: 30px; justify-content: center;
+  border: 1px solid var(--border); border-radius: 8px;
+  transition: all 0.15s;
+}
+.speak-toggle:hover { border-color: var(--border2); }
+.speak-toggle input { display: none; }
+.speak-icon { color: var(--dim); display: flex; align-items: center; transition: color 0.15s; }
+.speak-toggle:has(input:checked) { border-color: var(--accent-ring); background: var(--accent-bg); }
+.speak-toggle:has(input:checked) .speak-icon { color: var(--accent); }
+
+.chat-send-btn, .chat-stop-btn {
+  width: 30px; height: 30px;
+  display: flex; align-items: center; justify-content: center;
+  border: none; border-radius: 8px;
+  cursor: pointer; transition: all 0.15s;
+}
+.chat-send-btn { background: var(--accent); color: #fff; }
+.chat-send-btn:hover { background: var(--accent2); }
+.chat-send-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.chat-stop-btn { background: var(--red); color: #fff; }
+.chat-stop-btn:hover { filter: brightness(1.15); }
+=======
+>>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
 </style>
 </head>
 <body>
@@ -638,6 +836,13 @@ body {
   <header class="hdr">
     <h1>faster-qwen3-tts</h1>
     <span class="badge">CUDA GRAPHS</span>
+<<<<<<< HEAD
+    <div class="tab-bar">
+      <button class="tab-btn active" id="tabTTS" onclick="switchTab('tts')">TTS</button>
+      <button class="tab-btn" id="tabChat" onclick="switchTab('chat')">Chat</button>
+    </div>
+=======
+>>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
     <span class="spacer"></span>
     <button class="mpill" onclick="openSettings()" title="Settings">
       <span class="mdot" id="mdot"></span>
@@ -651,6 +856,11 @@ body {
     </button>
   </header>
 
+<<<<<<< HEAD
+  <!-- Tab panels -->
+  <div id="panelTTS" class="tab-panel">
+=======
+>>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
   <!-- Main content -->
   <div class="main">
     <div class="text-wrap">
@@ -754,6 +964,64 @@ body {
     </div>
 
   </div>
+<<<<<<< HEAD
+  </div><!-- /#panelTTS -->
+
+  <!-- Chat panel -->
+  <div id="panelChat" class="tab-panel" style="display:none">
+    <div class="chat-wrap">
+
+      <!-- System prompt (collapsible) -->
+      <div class="sys-prompt-wrap" id="sysPropWrap">
+        <button class="sys-toggle" onclick="toggleSysPrompt()" id="sysToggleBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="13" height="13"><polyline points="9 18 15 12 9 6"/></svg>
+          System prompt
+        </button>
+        <div id="sysPromptBody" class="sys-body" style="display:none">
+          <textarea id="sysPromptIn" class="sys-ta" rows="3"
+            placeholder="You are a helpful assistant."
+            oninput="saveChatSettings()">You are a helpful assistant.</textarea>
+        </div>
+      </div>
+
+      <!-- Messages -->
+      <div class="chat-msgs" id="chatMsgs">
+        <div class="chat-empty" id="chatEmpty">
+          <div class="chat-empty-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          </div>
+          <p>Ask anything — responses stream live and speak aloud</p>
+        </div>
+      </div>
+
+      <!-- Input bar -->
+      <div class="chat-input-row">
+        <div class="chat-input-wrap">
+          <textarea id="chatIn" class="chat-ta" rows="1"
+            placeholder="Message gemma3:4b…"
+            oninput="autoGrow(this)"
+            onkeydown="onChatKey(event)"></textarea>
+        </div>
+        <div class="chat-actions">
+          <label class="speak-toggle" title="Auto-speak responses">
+            <input type="checkbox" id="autoSpeak" onchange="saveChatSettings()">
+            <span class="speak-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="14" height="14"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 010 14.14"/><path d="M15.54 8.46a5 5 0 010 7.07"/></svg>
+            </span>
+          </label>
+          <button class="chat-send-btn" id="chatSendBtn" onclick="sendChat()" title="Send (Enter)">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="15" height="15"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+          </button>
+          <button class="chat-stop-btn" id="chatStopBtn" onclick="stopChat()" title="Stop" style="display:none">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="13" height="13"><rect x="4" y="4" width="16" height="16" rx="2"/></svg>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /#panelChat -->
+=======
+>>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
 
 </div><!-- /.app -->
 
@@ -799,6 +1067,16 @@ body {
         <span class="sv" id="chunkV">8</span>
       </div>
     </div>
+<<<<<<< HEAD
+=======
+    <div class="s-row">
+      <label>Text feed</label>
+      <div class="toggle">
+        <div class="tog on" data-nsm="0" onclick="setNonStreamingMode(false)">Step-by-step</div>
+        <div class="tog" data-nsm="1" onclick="setNonStreamingMode(true)">Prefill text</div>
+      </div>
+    </div>
+>>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
 
     <div class="s-section">Sampling</div>
     <div class="s-grid3">
@@ -833,6 +1111,25 @@ body {
       <label>Microphone</label>
       <select id="micSel"></select>
     </div>
+<<<<<<< HEAD
+
+    <div class="s-section">Ollama (Chat)</div>
+    <div class="s-row">
+      <label>Ollama URL</label>
+      <input type="text" id="ollamaUrl" class="s-input"
+        value="http://localhost:11434"
+        onchange="saveChatSettings()"
+        placeholder="http://localhost:11434">
+    </div>
+    <div class="s-row">
+      <label>Model</label>
+      <input type="text" id="ollamaModel" class="s-input"
+        value="gemma3:4b"
+        onchange="saveChatSettings()"
+        placeholder="gemma3:4b">
+    </div>
+=======
+>>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
   </div>
 </div>
 
@@ -863,6 +1160,10 @@ function setPlayBtns(disabled) {
 // ── State ─────────────────────────────────────────────────────────────────────
 let genMode  = 'stream';
 let xvecOnly = false;
+<<<<<<< HEAD
+=======
+let nonStreamingMode = false;
+>>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
 let busy     = false;
 let refFile  = null;
 let presetRefId = null;
@@ -893,11 +1194,19 @@ let recStream = null, recCtx = null, recSource = null, recProc = null;
 let recGain = null, recAnalyser = null, recMeterRaf = null, recMeterBuf = null;
 let recChunks = [], recActive = false, recDeviceId = null;
 let recPeak = 0, recHasSignal = false, recSignalTs = null, recSignalCount = 0;
+<<<<<<< HEAD
 const REC_SR = 16000;
+=======
+const REC_SR = 24000;
+>>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
 
 // ── Init ──────────────────────────────────────────────────────────────────────
 window.addEventListener('load', async () => {
   initTheme();
+<<<<<<< HEAD
+  loadChatSettings();
+=======
+>>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
   autoGrow($('voiceInstr'));
   await fetchStatus();
   if (!loadedModel && availableModels.length > 0) {
@@ -943,6 +1252,21 @@ function setMode(m) {
     el.classList.toggle('on', el.dataset.m === m));
   $('chunkRow').style.display = m === 'stream' ? '' : 'none';
 }
+<<<<<<< HEAD
+=======
+function setNonStreamingMode(v) {
+  nonStreamingMode = v;
+  document.querySelectorAll('.tog[data-nsm]').forEach(el =>
+    el.classList.toggle('on', el.dataset.nsm === (v ? '1' : '0')));
+}
+function defaultNonStreamingModeForModel(modelId) {
+  return !!modelId && (modelId.includes('CustomVoice') || modelId.includes('VoiceDesign'));
+}
+function syncTextFeedDefault(modelId) {
+  if (!modelId) return;
+  setNonStreamingMode(defaultNonStreamingModeForModel(modelId));
+}
+>>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
 function setXvec(v) {
   xvecOnly = v;
   document.querySelectorAll('.tog[data-x]').forEach(el =>
@@ -991,6 +1315,10 @@ async function selectPresetRef(id) {
 
     presetRefId = id;
     refFile = null; // avoid uploading when preset is selected
+<<<<<<< HEAD
+=======
+    setXvec(false); // presets have verified transcripts — use ICL mode
+>>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
     $('refLabel').textContent = d.label || d.filename || 'Reference audio';
     $('refChip').classList.add('has');
     const prev = $('recPreview');
@@ -1038,6 +1366,10 @@ async function fetchStatus() {
       // Only trust loadedModel when the server confirms it's actually loaded
       loadedModel = d.model;
       $('modelSel').value = d.model;
+<<<<<<< HEAD
+=======
+      syncTextFeedDefault(d.model);
+>>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
     }
     populateSpeakers(d.speakers || []);
     renderPresetRefs(d.preset_refs || []);
@@ -1059,6 +1391,10 @@ async function loadModel() {
     if (d.status === 'loaded' || d.status === 'already_loaded') {
       loadedModel  = loadingModel;
       loadingModel = null;
+<<<<<<< HEAD
+=======
+      syncTextFeedDefault(loadedModel);
+>>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
       setPill('loaded', 'ready');
       fetchStatus();
     } else {
@@ -1405,7 +1741,11 @@ async function stopRec() {
     prev.src = URL.createObjectURL(rawWav);
     prev.style.display = 'block';
 
+<<<<<<< HEAD
     // Resample to 16kHz in the background for server use
+=======
+    // Resample to 24kHz for server use (codec's native rate; transcription server handles 16kHz resampling)
+>>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
     let out = buf;
     if (buf.sampleRate !== REC_SR) {
       const len    = Math.ceil(buf.duration * REC_SR);
@@ -1415,6 +1755,10 @@ async function stopRec() {
       out = await offCtx.startRendering();
     }
     const wav = bufToWav(out);
+<<<<<<< HEAD
+=======
+    clearPresetSelection();
+>>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
     refFile = new File([wav], 'recorded.wav', { type: 'audio/wav' });
     $('refLabel').textContent = 'recorded.wav';
     $('refChip').classList.add('has');
@@ -1465,6 +1809,17 @@ async function warmAudio() {
   try { await initAudio(24000); } catch {}
 }
 
+<<<<<<< HEAD
+async function ensureAudio(sr) {
+  if (actx) {
+    if (actx.state === 'suspended') await actx.resume();
+    return;
+  }
+  await initAudio(sr);
+}
+
+=======
+>>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
 async function initAudio(sr) {
   rawPcmSr = sr || 24000;
   pcmQueue = []; rawPcmParts = [];
@@ -1592,6 +1947,10 @@ async function generate(mode) {
   fd.append('temperature',        $('tempSl').value);
   fd.append('top_k',              $('topkSl').value);
   fd.append('repetition_penalty', $('repSl').value);
+<<<<<<< HEAD
+=======
+  fd.append('non_streaming_mode', nonStreamingMode ? 'true' : 'false');
+>>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
 
   if (mode === 'voice_clone') {
     if (presetRefId) {
@@ -1765,15 +2124,275 @@ function dlAudio() {
 document.addEventListener('keydown', e => {
   if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
     e.preventDefault();
+<<<<<<< HEAD
+    if ($('panelChat').style.display !== 'none') {
+      sendChat();
+    } else {
+      const mode = refFile ? 'voice_clone' : $('speakerId').value ? 'custom' : 'voice_design';
+      generate(mode);
+    }
+=======
     // Pick best mode based on what's filled in
     const mode = refFile ? 'voice_clone' : $('speakerId').value ? 'custom' : 'voice_design';
     generate(mode);
+>>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
   }
   if (e.key === 'Escape') {
     if ($('loaderOv').classList.contains('open'))  $('loaderOv').classList.remove('open');
     else if ($('settingsOv').classList.contains('open')) closeSettings();
   }
 });
+<<<<<<< HEAD
+
+// ── Tab switching ─────────────────────────────────────────────────────────────
+function switchTab(tab) {
+  const isTTS = tab === 'tts';
+  $('panelTTS').style.display  = isTTS  ? '' : 'none';
+  $('panelChat').style.display = !isTTS ? '' : 'none';
+  $('tabTTS').classList.toggle('active', isTTS);
+  $('tabChat').classList.toggle('active', !isTTS);
+  if (!isTTS) setTimeout(() => $('chatMsgs').scrollTop = $('chatMsgs').scrollHeight, 50);
+}
+
+// ── Chat state ────────────────────────────────────────────────────────────────
+let chatHistory   = [];   // [{role, content}]
+let chatAbort     = null; // AbortController
+let chatBusy      = false;
+let ttsQueue      = Promise.resolve(); // serialise TTS requests
+let sentenceBuffer = '';
+
+// ── Chat settings persistence ─────────────────────────────────────────────────
+function saveChatSettings() {
+  localStorage.setItem('ollamaUrl',   $('ollamaUrl').value.trim());
+  localStorage.setItem('ollamaModel', $('ollamaModel').value.trim());
+  localStorage.setItem('sysPrompt',   $('sysPromptIn').value);
+  localStorage.setItem('autoSpeak',   $('autoSpeak').checked ? '1' : '0');
+}
+function loadChatSettings() {
+  const url   = localStorage.getItem('ollamaUrl');
+  const model = localStorage.getItem('ollamaModel');
+  const sys   = localStorage.getItem('sysPrompt');
+  const speak = localStorage.getItem('autoSpeak');
+  if (url)   $('ollamaUrl').value   = url;
+  if (model) $('ollamaModel').value = model;
+  if (sys != null)   $('sysPromptIn').value = sys;
+  if (speak != null) $('autoSpeak').checked = speak === '1';
+}
+
+// ── System prompt toggle ──────────────────────────────────────────────────────
+function toggleSysPrompt() {
+  const body = $('sysPromptBody');
+  const btn  = $('sysToggleBtn');
+  const open = body.style.display === 'none';
+  body.style.display = open ? '' : 'none';
+  btn.classList.toggle('open', open);
+}
+
+// ── Send chat message ─────────────────────────────────────────────────────────
+function onChatKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendChat();
+  }
+}
+
+async function sendChat() {
+  const input = $('chatIn').value.trim();
+  if (!input || chatBusy) return;
+
+  $('chatEmpty').style.display = 'none';
+
+  // Add user message to history and UI
+  chatHistory.push({ role: 'user', content: input });
+  appendBubble('user', input);
+  $('chatIn').value = '';
+  $('chatIn').style.height = 'auto';
+
+  // Create empty assistant bubble for streaming
+  const assistantEl = appendBubble('assistant', '');
+  assistantEl.querySelector('.bubble-text').classList.add('streaming');
+
+  setChatBusy(true);
+  sentenceBuffer = '';
+  let fullResponse = '';
+
+  const ollamaUrl  = ($('ollamaUrl').value  || 'http://localhost:11434').replace(/\/$/, '');
+  const modelName  = $('ollamaModel').value || 'gemma3:4b';
+  const sysPrompt  = $('sysPromptIn').value.trim();
+
+  const messages = [];
+  if (sysPrompt) messages.push({ role: 'system', content: sysPrompt });
+  messages.push(...chatHistory);
+
+  chatAbort = new AbortController();
+
+  try {
+    const res = await fetch(`${ollamaUrl}/api/chat`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: modelName, messages, stream: true }),
+      signal: chatAbort.signal,
+    });
+
+    if (!res.ok) throw new Error(`Ollama error ${res.status}: ${await res.text()}`);
+
+    const reader  = res.body.getReader();
+    const decoder = new TextDecoder();
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      const lines = decoder.decode(value, { stream: true }).split('\n');
+      for (const line of lines) {
+        if (!line.trim()) continue;
+        let parsed;
+        try { parsed = JSON.parse(line); } catch { continue; }
+
+        const token = parsed?.message?.content || '';
+        if (token) {
+          fullResponse += token;
+          updateLastBubble(assistantEl, fullResponse);
+          scrollChatToBottom();
+
+          // Pipe completed sentences to TTS
+          if ($('autoSpeak').checked) {
+            sentenceBuffer += token;
+            flushSentences(false);
+          }
+        }
+
+        if (parsed.done) break;
+      }
+    }
+
+    // Flush any remaining buffer when stream ends
+    if ($('autoSpeak').checked && sentenceBuffer.trim()) {
+      flushSentences(true);
+    }
+
+    assistantEl.querySelector('.bubble-text').classList.remove('streaming');
+    chatHistory.push({ role: 'assistant', content: fullResponse });
+
+  } catch (err) {
+    assistantEl.querySelector('.bubble-text').classList.remove('streaming');
+    if (err.name !== 'AbortError') {
+      updateLastBubble(assistantEl, `⚠ ${err.message}`);
+    } else {
+      if (fullResponse) chatHistory.push({ role: 'assistant', content: fullResponse });
+    }
+  } finally {
+    setChatBusy(false);
+    chatAbort = null;
+  }
+}
+
+function stopChat() {
+  if (chatAbort) chatAbort.abort();
+}
+
+// ── Sentence chunking → TTS ───────────────────────────────────────────────────
+function flushSentences(force) {
+  const sentenceRe = /[^.!?\n]*[.!?\n]+/g;
+  let match;
+  let lastIdx = 0;
+  while ((match = sentenceRe.exec(sentenceBuffer)) !== null) {
+    const sentence = match[0].trim();
+    if (sentence) scheduleTTS(sentence);
+    lastIdx = sentenceRe.lastIndex;
+  }
+  sentenceBuffer = sentenceBuffer.slice(lastIdx);
+  // If force-flush (stream ended) and remainder exists, speak it
+  if (force && sentenceBuffer.trim()) {
+    scheduleTTS(sentenceBuffer.trim());
+    sentenceBuffer = '';
+  }
+}
+
+function scheduleTTS(text) {
+  ttsQueue = ttsQueue.then(() => speakViaAPI(text)).catch(() => {});
+}
+
+async function speakViaAPI(text) {
+  // Resume the audio context without clearing the playback queue so
+  // consecutive sentences flow seamlessly into each other.
+  await ensureAudio(24000);
+
+  const fd = new FormData();
+  fd.append('text',       text);
+  fd.append('language',   $('langSel')?.value || 'English');
+  fd.append('mode',       'voice_clone');
+  fd.append('chunk_size', '8');
+
+  // Use the active preset ref as the voice
+  if (presetRefs.length > 0) {
+    fd.append('ref_preset', presetRefId || presetRefs[0].id);
+  } else if (refFile) {
+    fd.append('ref_audio', refFile);
+  }
+
+  const res = await fetch('/generate/stream', { method: 'POST', body: fd });
+  if (!res.ok) return;
+
+  const reader  = res.body.getReader();
+  const decoder = new TextDecoder();
+  let lineBuf = '';
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+
+    // Use same line-buffering pattern as runStream() to avoid split-chunk bugs
+    lineBuf += decoder.decode(value, { stream: true });
+    const lines = lineBuf.split('\n');
+    lineBuf = lines.pop(); // keep incomplete last line
+
+    for (const line of lines) {
+      if (!line.startsWith('data: ')) continue;
+      let ev;
+      try { ev = JSON.parse(line.slice(6)); } catch { continue; }
+
+      if (ev.type === 'chunk' && ev.audio_b64) {
+        // Feed directly into the existing gapless ScriptProcessor queue —
+        // same call the TTS tab uses, giving seamless sentence-to-sentence audio
+        enqueueChunk(ev.audio_b64);
+      }
+    }
+  }
+}
+
+// ── Chat UI helpers ───────────────────────────────────────────────────────────
+function appendBubble(role, text) {
+  const wrap = document.createElement('div');
+  wrap.className = `chat-bubble ${role}`;
+  wrap.innerHTML = `<div class="bubble-role">${role}</div><div class="bubble-text">${escHtml(text)}</div>`;
+  $('chatMsgs').appendChild(wrap);
+  scrollChatToBottom();
+  return wrap;
+}
+
+function updateLastBubble(el, text) {
+  el.querySelector('.bubble-text').textContent = text;
+}
+
+function scrollChatToBottom() {
+  const m = $('chatMsgs');
+  m.scrollTop = m.scrollHeight;
+}
+
+function setChatBusy(b) {
+  chatBusy = b;
+  $('chatSendBtn').style.display = b ? 'none' : '';
+  $('chatStopBtn').style.display = b ? '' : 'none';
+  $('chatIn').disabled = b;
+}
+
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+=======
+>>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
 </script>
 </body>
 </html>

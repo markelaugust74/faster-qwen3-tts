@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  faster-qwen3-tts:
+    build:
+      context: .
+      dockerfile: demo/Dockerfile
+    ports:
+      - "7860:7860"
+    volumes:
+      # Named volume for Hugging Face model cache
+      - hf_cache:/root/.cache/huggingface
+      # Mount models folder if you want to use the ones we already downloaded
+      - ./models:/app/models
+      # Mount custom voice preset
+      - C:/Users/markel/Desktop/Chatter-tts-turbo/aurelia_Ruri.mp3:/app/voices/aurelia_ruri.mp3:ro
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    restart: unless-stopped
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility
+      - ACTIVE_MODELS=Qwen/Qwen3-TTS-12Hz-1.7B-Base,Qwen/Qwen3-TTS-12Hz-0.6B-Base
+
+volumes:
+  hf_cache:

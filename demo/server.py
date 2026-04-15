@@ -21,6 +21,10 @@ import tempfile
 import threading
 import time
 from pathlib import Path
+<<<<<<< HEAD
+from typing import Optional
+=======
+>>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
 
 import numpy as np
 import soundfile as sf
@@ -30,6 +34,11 @@ import uvicorn
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse, StreamingResponse
+<<<<<<< HEAD
+from pydantic import BaseModel
+from pydub import AudioSegment
+=======
+>>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
 
 # Allow running from any directory
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -64,12 +73,27 @@ BASE_DIR = Path(__file__).resolve().parent
 # /app is read-only in HF Spaces; fall back to /tmp.
 _ASSET_DIR = Path(os.environ.get("ASSET_DIR", "/tmp/faster-qwen3-tts-assets"))
 PRESET_TRANSCRIPTS = _ASSET_DIR / "samples" / "parity" / "icl_transcripts.txt"
+<<<<<<< HEAD
+
+# Custom voice preset mounted via docker volume
+_AURELIA_PATH = Path("/app/voices/aurelia_ruri.mp3")
+
 PRESET_REFS = [
+    ("aurelia_ruri", _AURELIA_PATH, "Aurelia Ruri"),
+=======
+PRESET_REFS = [
+>>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
     ("ref_audio_3", _ASSET_DIR / "ref_audio_3.wav", "Clone 1"),
     ("ref_audio_2", _ASSET_DIR / "ref_audio_2.wav", "Clone 2"),
     ("ref_audio", _ASSET_DIR / "ref_audio.wav", "Clone 3"),
 ]
 
+<<<<<<< HEAD
+# Default voice used by the OpenAI endpoint when no voice is specified
+DEFAULT_VOICE = "aurelia_ruri"
+
+=======
+>>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
 _GITHUB_RAW = "https://raw.githubusercontent.com/andimarafioti/faster-qwen3-tts/main"
 _PRESET_REMOTE = {
     "ref_audio":   f"{_GITHUB_RAW}/ref_audio.wav",
@@ -78,6 +102,22 @@ _PRESET_REMOTE = {
 }
 _TRANSCRIPT_REMOTE = f"{_GITHUB_RAW}/samples/parity/icl_transcripts.txt"
 
+<<<<<<< HEAD
+# OpenAI voice name -> preset ref key mapping
+# alloy/onyx use the custom Aurelia Ruri voice as the primary default
+_OPENAI_VOICE_MAP = {
+    "alloy":        "aurelia_ruri",
+    "onyx":         "aurelia_ruri",
+    "nova":         "aurelia_ruri",
+    "echo":         "ref_audio",
+    "fable":        "ref_audio_2",
+    "shimmer":      "ref_audio_3",
+    "aurelia":      "aurelia_ruri",
+    "aurelia_ruri": "aurelia_ruri",
+}
+
+=======
+>>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
 
 def _fetch_preset_assets() -> None:
     """Download preset wav files and transcripts from GitHub if not present locally."""
@@ -211,6 +251,35 @@ def _get_cached_ref_path(content: bytes) -> str:
         _ref_cache[digest] = str(path)
         return str(path)
 
+<<<<<<< HEAD
+def _encode_audio(audio_np: np.ndarray, sr: int, fmt: str = "mp3") -> bytes:
+    """Convert numpy float32 audio to specified format bytes using pydub + ffmpeg."""
+    audio_int16 = (np.clip(audio_np, -1.0, 1.0) * 32767).astype(np.int16)
+    segment = AudioSegment(
+        audio_int16.tobytes(),
+        frame_rate=sr,
+        sample_width=2,
+        channels=1,
+    )
+    buf = io.BytesIO()
+    export_fmt = "ogg" if fmt == "opus" else fmt
+    segment.export(buf, format=export_fmt)
+    return buf.getvalue()
+
+def _get_active_model_type() -> str:
+    active = _model_cache.get(_active_model_name)
+    if active is None:
+        return "voice_clone"
+    try:
+        return active.model.model.tts_model_type
+    except Exception:
+        return "voice_clone"
+=======
+
+def _default_non_streaming_mode_for_mode(mode: str) -> bool:
+    return mode != "voice_clone"
+>>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
+
 
 # ─── Routes ───────────────────────────────────────────────────────────────────
 
@@ -342,6 +411,10 @@ async def generate_stream(
     temperature: float = Form(0.9),
     top_k: int = Form(50),
     repetition_penalty: float = Form(1.05),
+<<<<<<< HEAD
+=======
+    non_streaming_mode: bool | None = Form(None),
+>>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
     ref_preset: str = Form(""),
     ref_audio: UploadFile = File(None),
 ):
@@ -372,6 +445,12 @@ async def generate_stream(
         tmp_path = _get_cached_ref_path(content)
         tmp_is_cached = True
 
+<<<<<<< HEAD
+=======
+    if non_streaming_mode is None:
+        non_streaming_mode = _default_non_streaming_mode_for_mode(mode)
+
+>>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
     loop = asyncio.get_event_loop()
     queue: asyncio.Queue[str | None] = asyncio.Queue()
 
@@ -395,6 +474,10 @@ async def generate_stream(
                     ref_audio=tmp_path,
                     ref_text=ref_text,
                     xvec_only=xvec_only,
+<<<<<<< HEAD
+=======
+                    non_streaming_mode=non_streaming_mode,
+>>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
                     chunk_size=chunk_size,
                     temperature=temperature,
                     top_k=top_k,
@@ -409,6 +492,10 @@ async def generate_stream(
                     speaker=speaker,
                     language=language,
                     instruct=instruct,
+<<<<<<< HEAD
+=======
+                    non_streaming_mode=non_streaming_mode,
+>>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
                     chunk_size=chunk_size,
                     temperature=temperature,
                     top_k=top_k,
@@ -420,6 +507,10 @@ async def generate_stream(
                     text=text,
                     instruct=instruct,
                     language=language,
+<<<<<<< HEAD
+=======
+                    non_streaming_mode=non_streaming_mode,
+>>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
                     chunk_size=chunk_size,
                     temperature=temperature,
                     top_k=top_k,
@@ -541,8 +632,11 @@ async def generate_stream(
     )
 
 
+<<<<<<< HEAD
+=======
 
 
+>>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
 @app.post("/generate")
 async def generate_non_streaming(
     text: str = Form(...),
@@ -555,6 +649,10 @@ async def generate_non_streaming(
     temperature: float = Form(0.9),
     top_k: int = Form(50),
     repetition_penalty: float = Form(1.05),
+<<<<<<< HEAD
+=======
+    non_streaming_mode: bool | None = Form(None),
+>>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
     ref_preset: str = Form(""),
     ref_audio: UploadFile = File(None),
 ):
@@ -585,6 +683,12 @@ async def generate_non_streaming(
         tmp_path = _get_cached_ref_path(content)
         tmp_is_cached = True
 
+<<<<<<< HEAD
+=======
+    if non_streaming_mode is None:
+        non_streaming_mode = _default_non_streaming_mode_for_mode(mode)
+
+>>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
     def run():
         # Resolve the model after the generation lock is held.
         model = _model_cache.get(_active_model_name)
@@ -598,6 +702,10 @@ async def generate_non_streaming(
                 ref_audio=tmp_path,
                 ref_text=ref_text,
                 xvec_only=xvec_only,
+<<<<<<< HEAD
+=======
+                non_streaming_mode=non_streaming_mode,
+>>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
                 temperature=temperature,
                 top_k=top_k,
                 repetition_penalty=repetition_penalty,
@@ -611,6 +719,10 @@ async def generate_non_streaming(
                 speaker=speaker,
                 language=language,
                 instruct=instruct,
+<<<<<<< HEAD
+=======
+                non_streaming_mode=non_streaming_mode,
+>>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
                 temperature=temperature,
                 top_k=top_k,
                 repetition_penalty=repetition_penalty,
@@ -621,6 +733,10 @@ async def generate_non_streaming(
                 text=text,
                 instruct=instruct,
                 language=language,
+<<<<<<< HEAD
+=======
+                non_streaming_mode=non_streaming_mode,
+>>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
                 temperature=temperature,
                 top_k=top_k,
                 repetition_penalty=repetition_penalty,
@@ -658,6 +774,183 @@ async def generate_non_streaming(
             os.unlink(tmp_path)
 
 
+<<<<<<< HEAD
+# ─── OpenAI-Compatible API ────────────────────────────────────────────────────
+
+class OpenAISpeechRequest(BaseModel):
+    model: str = "Qwen/Qwen3-TTS-12Hz-1.7B-Base"
+    input: str
+    voice: Optional[str] = DEFAULT_VOICE
+    response_format: Optional[str] = "mp3"
+    speed: Optional[float] = 1.0
+    stream: Optional[bool] = False
+
+
+async def _ensure_model_loaded(requested_model: str):
+    """Auto-load or switch to the requested model."""
+    global _active_model_name
+
+    # Accept short aliases like "0.6b" or "1.7b" for convenience
+    model_aliases = {
+        "0.6b": "Qwen/Qwen3-TTS-12Hz-0.6B-Base",
+        "1.7b": "Qwen/Qwen3-TTS-12Hz-1.7B-Base",
+        "0.6b-custom": "Qwen/Qwen3-TTS-12Hz-0.6B-CustomVoice",
+        "1.7b-custom": "Qwen/Qwen3-TTS-12Hz-1.7B-CustomVoice",
+        "1.7b-design": "Qwen/Qwen3-TTS-12Hz-1.7B-VoiceDesign",
+        "tts-1": "Qwen/Qwen3-TTS-12Hz-1.7B-Base",
+        "tts-1-hd": "Qwen/Qwen3-TTS-12Hz-1.7B-Base",
+    }
+    resolved = model_aliases.get(requested_model.lower(), requested_model)
+
+    if resolved not in AVAILABLE_MODELS:
+        # Fall back to first available model instead of erroring out
+        resolved = AVAILABLE_MODELS[0] if AVAILABLE_MODELS else "Qwen/Qwen3-TTS-12Hz-1.7B-Base"
+
+    if _active_model_name != resolved or resolved not in _model_cache:
+        print(f"OpenAI API: switching model to {resolved}")
+        await load_model(model_id=resolved)
+
+    return resolved
+
+
+@app.post("/v1/audio/speech")
+async def openai_speech(request: OpenAISpeechRequest):
+    """
+    OpenAI-compatible TTS endpoint.
+    Supports: mp3, opus, aac, flac, wav, pcm response formats.
+    Voice names alloy/echo/fable/onyx/nova/shimmer map to built-in presets.
+    Pass any AVAILABLE_MODELS string as `model` to switch models on the fly.
+    """
+    await _ensure_model_loaded(request.model)
+
+    text = request.input
+    if not text:
+        raise HTTPException(status_code=400, detail="input text is required.")
+    if len(text) > MAX_TEXT_CHARS:
+        raise HTTPException(status_code=400, detail=f"Input too long. Max {MAX_TEXT_CHARS} chars.")
+
+    model_type = _get_active_model_type()
+    response_format = (request.response_format or "mp3").lower()
+    media_type_map = {
+        "mp3": "audio/mpeg",
+        "opus": "audio/ogg",
+        "aac": "audio/aac",
+        "flac": "audio/flac",
+        "wav": "audio/wav",
+        "pcm": "audio/pcm",
+    }
+    media_type = media_type_map.get(response_format, "audio/mpeg")
+
+    # Resolve voice to a preset ref key or speaker ID
+    voice = request.voice or "alloy"
+    preset_key = _OPENAI_VOICE_MAP.get(voice, voice)
+    preset = _preset_refs.get(preset_key) or _preset_refs.get("ref_audio")
+
+    loop = asyncio.get_event_loop()
+
+    if request.stream:
+        queue: asyncio.Queue[bytes | None] = asyncio.Queue()
+
+        def run_stream():
+            try:
+                model = _model_cache.get(_active_model_name)
+                if model_type == "custom":
+                    gen = model.generate_custom_voice_streaming(
+                        text=text,
+                        speaker=voice,
+                        language="English",
+                        chunk_size=8,
+                    )
+                else:
+                    gen = model.generate_voice_clone_streaming(
+                        text=text,
+                        language="English",
+                        ref_audio=preset["path"] if preset else None,
+                        ref_text=preset["ref_text"] if preset else "",
+                        chunk_size=8,
+                    )
+                for audio_chunk, sr, _ in gen:
+                    audio_chunk = _concat_audio(audio_chunk)
+                    if audio_chunk.size == 0:
+                        continue
+                    if response_format == "wav":
+                        buf = io.BytesIO()
+                        sf.write(buf, audio_chunk, sr, format="WAV", subtype="PCM_16")
+                        loop.call_soon_threadsafe(queue.put_nowait, buf.getvalue())
+                    elif response_format == "pcm":
+                        pcm = (np.clip(audio_chunk, -1.0, 1.0) * 32767).astype(np.int16)
+                        loop.call_soon_threadsafe(queue.put_nowait, pcm.tobytes())
+                    else:
+                        loop.call_soon_threadsafe(queue.put_nowait, _encode_audio(audio_chunk, sr, fmt=response_format))
+            except Exception as e:
+                print(f"OpenAI streaming error: {e}")
+            finally:
+                loop.call_soon_threadsafe(queue.put_nowait, None)
+
+        async def streamer():
+            lock_acquired = False
+            try:
+                await _generation_lock.acquire()
+                lock_acquired = True
+                threading.Thread(target=run_stream, daemon=True).start()
+                while True:
+                    chunk = await queue.get()
+                    if chunk is None:
+                        break
+                    yield chunk
+            finally:
+                if lock_acquired:
+                    _generation_lock.release()
+
+        return StreamingResponse(streamer(), media_type=media_type)
+
+    else:
+        def run_sync():
+            model = _model_cache.get(_active_model_name)
+            if model_type == "custom":
+                audio_list, sr = model.generate_custom_voice(text=text, speaker=voice, language="English")
+            else:
+                audio_list, sr = model.generate_voice_clone(
+                    text=text,
+                    language="English",
+                    ref_audio=preset["path"] if preset else None,
+                    ref_text=preset["ref_text"] if preset else "",
+                )
+            audio = _concat_audio(audio_list)
+            if response_format == "wav":
+                buf = io.BytesIO()
+                sf.write(buf, audio, sr, format="WAV", subtype="PCM_16")
+                return buf.getvalue()
+            elif response_format == "pcm":
+                return (np.clip(audio, -1.0, 1.0) * 32767).astype(np.int16).tobytes()
+            else:
+                return _encode_audio(audio, sr, fmt=response_format)
+
+        async with _generation_lock:
+            audio_bytes = await asyncio.to_thread(run_sync)
+
+        return StreamingResponse(io.BytesIO(audio_bytes), media_type=media_type)
+
+
+@app.get("/v1/models")
+async def list_openai_models():
+    """OpenAI-compatible models list."""
+    return {
+        "object": "list",
+        "data": [
+            {
+                "id": m,
+                "object": "model",
+                "created": int(time.time()),
+                "owned_by": "qwen",
+            }
+            for m in AVAILABLE_MODELS
+        ],
+    }
+
+
+=======
+>>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
 # ─── Entry point ──────────────────────────────────────────────────────────────
 
 def main():

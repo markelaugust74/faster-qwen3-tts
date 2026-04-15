@@ -5,3 +5,7 @@ uvicorn[standard]>=0.24.0
 python-multipart>=0.0.7
 nano-parakeet
 torchaudio
+<<<<<<< HEAD
+pydub
+=======
+>>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd

@@ -13,12 +13,33 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
+<<<<<<< HEAD
+
+# Copy only dependency files first so the pip install layer is cached
+# independently of source code changes. As long as these files don't
+# change, Docker reuses the cached layer and skips the heavy download.
+COPY demo/requirements.txt demo/requirements.txt
+COPY pyproject.toml pyproject.toml
+=======
 COPY . /app
+>>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
 
 RUN python3 -m pip install --upgrade pip \
     && python3 -m pip install --index-url https://download.pytorch.org/whl/cu126 torch torchaudio \
     && python3 -m pip install "faster-qwen3-tts[demo]" \
+<<<<<<< HEAD
+    && python3 -m pip install -r demo/requirements.txt \
+    && python3 -m pip install --no-deps "qwen-tts>=0.1.1"
+
+# Copy source code last — changes to server.py, index.html, etc.
+# only invalidate this thin layer, not the pip install above.
+COPY . /app
+
+EXPOSE 7860
+CMD ["python3", "demo/server.py", "--host", "0.0.0.0"]
+=======
     && python3 -m pip install -r requirements.txt
 
 EXPOSE 7860
 CMD ["python3", "server.py", "--host", "0.0.0.0"]
+>>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd

@@ -63,8 +63,14 @@ If `setup_windows.bat` warns that CUDA is not available:
 2. Run `nvidia-smi` to check CUDA support.
 3. You may need to manually install the CUDA version of PyTorch:
    ```cmd
+<<<<<<< HEAD
    .venv\Scripts\pip install torch --index-url https://download.pytorch.org/whl/cu124
    ```
+=======
+   .venv\Scripts\pip install \"torch>=2.7.0\" --index-url https://download.pytorch.org/whl/cu128
+   ```
+4. RTX 50xx / Blackwell GPUs need CUDA 12.8 PyTorch wheels.
+>>>>>>> 3ee34963f41bc393cacf0f026f5190b4715d78fd
 
 ### Python Not Found
 Ensure Python 3.10 or later is installed and added to your system PATH.

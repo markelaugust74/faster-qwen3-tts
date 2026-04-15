@@ -1,0 +1,7 @@
+.venv
+models
+*.wav
+*.mp3
+benchmarks/
+.git
+__pycache__
